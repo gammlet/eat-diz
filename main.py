@@ -69,6 +69,7 @@ def show_message():
     steps_heat2 = int(heating_time2 / dt)
     T_heat2 = np.linspace(T_start_heat2, T_end_heat2, steps_heat2)
 
+##################################################################SEPARATE
     # Combine all segments
     T_profile = np.concatenate([T_cool, T_heat, T_iso, T_cool2, T_heat2])
     total_steps = len(T_profile)
@@ -104,6 +105,24 @@ def show_message():
     # === Plot Results ===
     plt.figure(figsize=(8, 8))
 
+    # === Period Boundaries ===
+    cool_end = len(T_cool)
+    heat_start = cool_end
+    heat_end = heat_start + len(T_heat)
+    iso_start = heat_end
+    iso_end = iso_start + len(T_iso)
+    cool2_start = iso_end
+    cool2_end = cool2_start + len(T_cool2)
+    heat2_start = cool2_end
+    heat2_end = heat2_start + len(T_heat2)
+
+    # === Colors for periods ===
+    cool_color = '#1f77b4'  # Blue
+    heat_color = '#ff7f0e'  # Orange
+    iso_color = '#2ca02c'   # Green
+    cool2_color = '#4a3a32'  # Night
+    heat2_color = '#ffff00'  # yl
+
     # Temperature profile
     plt.subplot(2, 1, 1)
     plt.plot(time_hours, T_profile, 'b-', label='Actual Temperature')
@@ -118,16 +137,19 @@ def show_message():
     plt.grid(True)
     plt.title('Temperature Profile')
     plt.legend()
-
-    # Fictive temperature vs actual temperature
     plt.subplot(2, 1, 2)
-    plt.plot(T_profile, Tf, 'r-', label='Fictive Temperature')
+    # Fictive temperature vs actual temperature
+    plt.plot(T_profile[:cool_end], Tf[:cool_end], color=cool_color, label='Cooling')
+    plt.plot(T_profile[heat_start:heat_end], Tf[heat_start:heat_end], color=heat_color, label='Heating')
+    plt.plot(T_profile[iso_start:iso_end], Tf[iso_start:iso_end], color=iso_color, label='Isothermal Hold')
+    plt.plot(T_profile[cool2_start:cool2_end], Tf[cool2_start:cool2_end], color=cool2_color, label='Cooling 2')
+    plt.plot(T_profile[heat2_start:heat2_end], Tf[heat2_start:heat2_end], color=heat2_color, label='Heating 2')
+    
     plt.plot(T_profile, T_profile, 'k--', label='Equilibrium')
     plt.xlabel('Actual Temperature (K)')
     plt.ylabel('Fictive Temperature (K)')
-    plt.title('Fictive vs Actual Temperature')
-    plt.grid(True)
     plt.legend()
+    plt.grid(True)
 
     plt.tight_layout()
     plt.show()
