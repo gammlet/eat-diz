@@ -261,12 +261,12 @@ main_frame.pack(fill=tk.BOTH, expand=True)
 data1_frame = tk.LabelFrame(main_frame, text="Simulation Data", padx=10, pady=10)
 data1_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10)
 fields = [
-    "Simulation Data", "Enter cooling rate K/s",
+    "Enter cooling rate K/s",
     "Enter start temp for cooling K",
     "Enter start temp for heating (same as end temp for cooling) K",
     "Enter heating rate K/s",
     "Enter end heating temp(same as isotermic hold temp," + "\n" + " and start temp of second cooling period) K",
-    "Enter isotermic hold time 1 or 0.5 hr"
+    "Enter isotermic hold time 1 or 0.5 hr",
     "Enter second cooling rate K/s",
     "Enter second cooling end temp " + "\n" + "(same as start temp for second heating) K",
     "Enter second heating rate K/s",
