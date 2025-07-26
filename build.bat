@@ -1,9 +1,14 @@
+rmdir /s /q .\dist
+rmdir /s /q .\sim_env
+
 python3 -m venv sim_env
-sim_env\Scripts\activate.bat
+call .\sim_env\Scripts\activate.bat
 
 pip install matplotlib
 pip install numpy
 pip install pyinstaller
 
 pyinstaller main.py --onefile --windowed
-python3 main.py
+REM python3 main.py
+
+.\dist\main.exe
