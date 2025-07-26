@@ -6,4 +6,4 @@ pip install numpy
 pip install pyinstaller
 
 pyinstaller main.py --onefile --windowed
-python3 main.py
+#python3 main.py
