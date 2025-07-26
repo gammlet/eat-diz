@@ -1,5 +1,5 @@
 python3 -m venv sim_env
-source sim_test_env/bin/activate
+source sim_env/bin/activate
 
 pip install matplotlib
 pip install numpy
