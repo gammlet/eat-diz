@@ -1,9 +1,9 @@
-
-python3 -m venv new_test_env
-source my_env/bin/activate
+python3 -m venv sim_env
+source sim_test_env/bin/activate
 
 pip install matplotlib
 pip install numpy
 pip install pyinstaller
 
+pyinstaller main.py --onefile --windowed
 python3 main.py
