@@ -1,5 +1,5 @@
 python3 -m venv sim_env
-source sim_env\Scripts\activate.bat
+sim_env\Scripts\activate.bat
 
 pip install matplotlib
 pip install numpy
