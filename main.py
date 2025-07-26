@@ -3,17 +3,21 @@ import matplotlib.pyplot as plt
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-
+# Dict with entrys
+entries = {}
+mat_entries = {}
 
 def show_message():
     # Get all input values
     inputs = [
-        ent1.get(), ent2.get(), ent3.get(), ent4.get(), ent5.get(),
-        ent6.get(), ent7.get(), ent8.get(), ent9.get(), ent10.get(),
-        delta_h_star_ent.get(), x_ent.get(), beta_ent.get()
+        entries["ent1"].get(), entries["ent2"].get(), entries["ent3"].get(), entries["ent4"].get(), entries["ent5"].get(),
+        entries["ent6"].get(), entries["ent7"].get(), entries["ent8"].get(), entries["ent9"].get(), entries["ent10"].get(),
+        mat_entries["mat1"].get(), mat_entries["mat2"].get(), mat_entries["mat3"].get()
     ]
 
     # Check for empty entries
+    if val.get() == 0:
+        inputs.append(A_ent.get())
     empty_fields = [f"Field {i + 1}" for i, val in enumerate(inputs) if not val]
     if empty_fields:
         messagebox.showerror("Error", f"Please complete these entries:\n{', '.join(empty_fields)}")
@@ -22,49 +26,56 @@ def show_message():
     # === Physical Constants ===
     R = 8.31  # Gas constant (J/mol·K)
 
-    # === Material Parameters ===
-    Delta_h_star = int(delta_h_star_ent.get())  # Activation enthalpy (J/mol)
-    x = float(x_ent.get())  # Mixing parameter
-    beta = float(beta_ent.get())  # Stretching exponent (KWW exponent)
+    # === Material Paramat_entries["mat1"].get()
+    Delta_h_star = int(mat_entries["mat1"].get())  # Activation enthalpy (J/mol)
+    x = float(mat_entries["mat2"].get())  # Mixing parameter
+    beta = float(mat_entries["mat3"].get())  # Stretching exponent (KWW exponent)
 
     # Calculate pre-exponential factor A
-    Tg = 500  # Glass transition temperature (K)
-    tau_Tg = 100  # Relaxation time at Tg (seconds)
-    A = tau_Tg / np.exp(Delta_h_star / (R * Tg))
-    print(f"Calculated A = {A:.3e}")
+    
+    
+    #################### A #####################
+
+    if val.get() == 1:
+        Tg = 500  # Glass transition temperature (K)
+        tau_Tg = 100  # Relaxation time at Tg (seconds) 
+        A = tau_Tg / np.exp(Delta_h_star / (R * Tg))
+        print(f"Calculated A = {A:.3e}")
+    else:
+        A = float(A_ent.get())
 
     # === Simulation Parameters ===
     dt = 1.0  # Time step (seconds)
 
     # === Create Temperature Profile ===
-    cooling_rate = float(ent1.get())  # K/s
-    T_start_cool = int(ent2.get())
-    T_end_cool = int(ent3.get())
+    cooling_rate = float( entries["ent1"].get())  # K/s
+    T_start_cool = int(entries["ent2"].get())
+    T_end_cool = int(entries["ent3"].get())
     cooling_time = (T_start_cool - T_end_cool) / cooling_rate
     steps_cool = int(cooling_time / dt)
     T_cool = np.linspace(T_start_cool, T_end_cool, steps_cool)
 
-    heating_rate = float(ent4.get())  # K/s
-    T_start_heat = int(ent3.get())
-    T_end_heat = int(ent5.get())
+    heating_rate = float(entries["ent4"].get())  # K/s
+    T_start_heat = int(entries["ent3"].get())
+    T_end_heat = int(entries["ent5"].get())
     heating_time = (T_end_heat - T_start_heat) / heating_rate
     steps_heat = int(heating_time / dt)
     T_heat = np.linspace(T_start_heat, T_end_heat, steps_heat)
 
-    hold_time = float(ent6.get()) * 3600  # hours to seconds
+    hold_time = float(entries["ent6"].get()) * 3600  # hours to seconds
     steps_iso = int(hold_time / dt)
     T_iso = np.full(steps_iso, T_end_heat)
 
-    cooling_rate2 = float(ent7.get())  # K/s
-    T_start_cool2 = int(ent5.get())
-    T_end_cool2 = int(ent8.get())
+    cooling_rate2 = float(entries["ent7"].get())  # K/s
+    T_start_cool2 = int(entries["ent5"].get())
+    T_end_cool2 = int(entries["ent8"].get())
     cooling_time2 = (T_start_cool2 - T_end_cool2) / cooling_rate2
     steps_cool2 = int(cooling_time2 / dt)
     T_cool2 = np.linspace(T_start_cool2, T_end_cool2, steps_cool2)
 
-    heating_rate2 = float(ent9.get())  # K/s
-    T_start_heat2 = int(ent8.get())
-    T_end_heat2 = int(ent10.get())
+    heating_rate2 = float(entries["ent9"].get())  # K/s
+    T_start_heat2 = int(entries["ent8"].get())
+    T_end_heat2 = int(entries["ent10"].get())
     heating_time2 = (T_end_heat2 - T_start_heat2) / heating_rate2
     steps_heat2 = int(heating_time2 / dt)
     T_heat2 = np.linspace(T_start_heat2, T_end_heat2, steps_heat2)
@@ -117,11 +128,11 @@ def show_message():
     heat2_end = heat2_start + len(T_heat2)
 
     # === Colors for periods ===
-    cool_color = '#1f77b4'  # Blue
-    heat_color = '#ff7f0e'  # Orange
+    cool_color = '#FF0000'  # 
+    heat_color = '#00FF00'  # Orae
     iso_color = '#2ca02c'   # Green
     cool2_color = '#4a3a32'  # Night
-    heat2_color = '#ffff00'  # yl
+    heat2_color = '#A849C9'  # yl
 
     # Temperature profile
     plt.subplot(2, 1, 1)
@@ -244,95 +255,58 @@ root.geometry("1000x500")
 
 main_frame = tk.Frame(root, padx=20, pady=20)
 main_frame.pack(fill=tk.BOTH, expand=True)
+
+
 ###############SIM FRAME####################
 data1_frame = tk.LabelFrame(main_frame, text="Simulation Data", padx=10, pady=10)
 data1_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10)
+fields = [
+    "Simulation Data", "Enter cooling rate K/s",
+    "Enter start temp for cooling K",
+    "Enter start temp for heating (same as end temp for cooling) K",
+    "Enter heating rate K/s",
+    "Enter end heating temp(same as isotermic hold temp," + "\n" + " and start temp of second cooling period) K",
+    "Enter isotermic hold time 1 or 0.5 hr"
+    "Enter second cooling rate K/s",
+    "Enter second cooling end temp " + "\n" + "(same as start temp for second heating) K",
+    "Enter second heating rate K/s",
+    "Enter second heating end temp K"
+    ]
 
-# cooling rate
-label1 = ttk.Label(data1_frame, text="Enter cooling rate K/s")
-label1.grid(row=0, column=0, sticky="w", padx=6, pady=6)
-ent1 = ttk.Entry(data1_frame)
-ent1.grid(row=0, column=1, padx=6, pady=6)
 
-# start temp C
-label2 = ttk.Label(data1_frame, text="Enter start temp for cooling K")
-label2.grid(row=1, column=0, sticky="w", padx=6, pady=6)
-ent2 = ttk.Entry(data1_frame)
-ent2.grid(row=1, column=1, padx=6, pady=6)
+for i, field in enumerate(fields, 1):
+    ttk.Label(data1_frame, text=field).grid(row=i,  column=0, sticky="w", padx=6, pady=6)
 
-# start temp H = end temp C
-label3 = ttk.Label(data1_frame, text="Enter start temp for heating (same as end temp for cooling) K")
-label3.grid(row=2, column=0, sticky="w", padx=6, pady=6)
-ent3 = ttk.Entry(data1_frame)
-ent3.grid(row=2, column=1, padx=6, pady=6)
-
-# heating rate
-label4 = ttk.Label(data1_frame, text="Enter heating rate K/s")
-label4.grid(row=3, column=0, sticky="w", padx=6, pady=6)
-ent4 = ttk.Entry(data1_frame)
-ent4.grid(row=3, column=1, padx=6, pady=6)
-
-# hold temp
-label5 = ttk.Label(data1_frame,
-                   text="Enter end heating temp(same as isotermic hold temp," + "\n" + " and start temp of second cooling period) K")
-label5.grid(row=4, column=0, sticky="w", padx=6, pady=6)
-ent5 = ttk.Entry(data1_frame)
-ent5.grid(row=4, column=1, padx=6, pady=6)
-
-# hold time
-label6 = ttk.Label(data1_frame, text="Enter isotermic hold time 1 or 0.5 hr")
-label6.grid(row=5, column=0, sticky="w", padx=6, pady=6)
-ent6 = ttk.Entry(data1_frame)
-ent6.grid(row=5, column=1, padx=6, pady=6)
-
-# second cooling rate
-cool2_rate = ttk.Label(data1_frame, text="Enter second cooling rate K/s")
-cool2_rate.grid(row=6, column=0, sticky="w", padx=6, pady=6)
-ent7 = ttk.Entry(data1_frame)
-ent7.grid(row=6, column=1, padx=6, pady=6)
-
-# cooling 2 end temp (same as start heating 2 temp)
-cooling2_end_temp = ttk.Label(data1_frame,
-                              text="Enter second cooling end temp " + "\n" + "(same as start temp for second heating) K")
-cooling2_end_temp.grid(row=7, column=0, sticky="w", padx=6, pady=6)
-ent8 = ttk.Entry(data1_frame)
-ent8.grid(row=7, column=1, padx=6, pady=6)
-
-# heating2 rate
-heating2_rate = ttk.Label(data1_frame, text="Enter second heating rate K/s")
-heating2_rate.grid(row=8, column=0, sticky="w", padx=6, pady=6)
-ent9 = ttk.Entry(data1_frame)
-ent9.grid(row=8, column=1, padx=6, pady=6)
-
-# heating2 end temp
-heating2_end_temp = ttk.Label(data1_frame, text="Enter second heating end temp K")
-heating2_end_temp.grid(row=9, column=0, sticky="w", padx=6, pady=6)
-ent10 = ttk.Entry(data1_frame)
-ent10.grid(row=9, column=1, padx=6, pady=6)
+    entries[f"ent{i}"] = ttk.Entry(data1_frame)
+    entries[f"ent{i}"].grid(row=i,  column=2, sticky="w", padx=6, pady=6)
 
 ############MATERIAL FRAME#################################
+
 material_frame = tk.LabelFrame(main_frame, text="Material Data", padx=10, pady=10)
 material_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10)
+material_fields = [
+    "Enter delta h star (J/mol) :",
+    "Enter x Mixing parameter:",
+    "Enter beta Stretching exponent:"
+    ]
 
-delta_h_star_label = ttk.Label(material_frame, text="Enter delta h star (J/mol) :")
-delta_h_star_label.grid(row=0, column=0, sticky="w", padx=6, pady=6)
-delta_h_star_ent = ttk.Entry(material_frame)
-delta_h_star_ent.grid(row=0, column=1, padx=6, pady=6)
+for i, field in enumerate(material_fields, 1):
+    ttk.Label(material_frame, text=field).grid(row=i,  column=0, sticky="w", padx=6, pady=6)
 
-x_label = ttk.Label(material_frame, text="Enter x Mixing parameter:")
-x_label.grid(row=1, column=0, sticky="w", padx=6, pady=6)
-x_ent = ttk.Entry(material_frame)
-x_ent.grid(row=1, column=1, padx=6, pady=6)
+    mat_entries[f"mat{i}"] = ttk.Entry(material_frame)
+    mat_entries[f"mat{i}"].grid(row=i,  column=2, sticky="w", padx=6, pady=6)
 
-beta_label = ttk.Label(material_frame, text="Enter beta Stretching exponent:")
-beta_label.grid(row=2, column=0, sticky="w", padx=6, pady=6)
-beta_ent = ttk.Entry(material_frame)
-beta_ent.grid(row=2, column=1, padx=6, pady=6)
+################### A #########################
 
-A_label = ttk.Label(material_frame, text="Enter A(does not work):")
-A_label.grid(row=3, column=0, sticky="w", padx=6, pady=6)
+val  = tk.IntVar(value = 0)
+
+A_enter_btn = ttk.Radiobutton(material_frame, text= "Enter A ", value=0, variable = val).grid(row=4, column=0, sticky="w", padx=6, pady=6)
+A_enter_btn = ttk.Radiobutton(material_frame, text= "Use Calculated A ", value=1, variable = val).grid(row=5, column=0, sticky="w", padx=6, pady=6)
+
 A_ent = ttk.Entry(material_frame)
-A_ent.grid(row=3, column=1, padx=6, pady=6)
+A_ent.grid(row=4, column=1, sticky="w", padx=6, pady=6)
+
+################### A #########################
 
 ##################TRASH#####################################
 button_frame = tk.Frame(root)
@@ -347,18 +321,19 @@ dop_frame.pack(pady=20)
 label = ttk.Label(dop_frame, text="hello there")
 label.grid(row=11, column=0, padx=6, pady=6)
 
-ent1.insert(0, 0.5)
-ent2.insert(0, 500)
-ent3.insert(0, 300)
-ent4.insert(0, 0.5)
-ent5.insert(0, 500)
-ent6.insert(0, 0.5)
-ent7.insert(0, 0.7)
-ent8.insert(0, 300)
-ent9.insert(0, 0.3)
-ent10.insert(0, 500)
-delta_h_star_ent.insert(0, 315000)
-x_ent.insert(0, 0.5)
-beta_ent.insert(0, 0.7)
+entries["ent1"].insert(0, 0.5)
+entries["ent2"].insert(0, 500)
+entries["ent3"].insert(0, 300)
+entries["ent4"].insert(0, 0.5)
+entries["ent5"].insert(0, 500)
+entries["ent6"].insert(0, 0.5)
+entries["ent7"].insert(0, 0.7)
+entries["ent8"].insert(0, 300)
+entries["ent9"].insert(0, 0.3)
+entries["ent10"].insert(0, 500)
+mat_entries["mat1"].insert(0, 315000) #delta h star
+mat_entries["mat2"].insert(0, 0.5) # x
+mat_entries["mat3"].insert(0, 0.7) # beta
+A_ent.insert(0, 4e-35)
 
 root.mainloop()
